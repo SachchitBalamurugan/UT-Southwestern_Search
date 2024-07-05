@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SimCenter OSCE Grading Platform</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
+    <style>
+        .tt-menu {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 class="mt-5">SimCenter OSCE Grading Platform</h1>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">SimCenter OSCE Grading Platform</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/search">Search for Student</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Note</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="mt-4">
+        <h2>Search For A Student</h2>
+        <div class="form-group">
+            <select class="form-control" id="studentDropdown">
+                {% for student in students %}
+                <option>{{ student }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button class="btn btn-primary">Search</button>
+    </div>
+    <div class="mt-4">
+        <h2>Autocomplete Search Bar</h2>
+        <input type="text" class="form-control" id="autocomplete" placeholder="Search...">
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        var students = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.whitespace,
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: {
+                url: '/autocomplete?q=%QUERY',
+                wildcard: '%QUERY'
+            }
+        });
+
+        $('#autocomplete').typeahead(null, {
+            name: 'students',
+            source: students
+        });
+    });
+</script>
+</body>
+</html>
